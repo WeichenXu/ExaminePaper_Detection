@@ -13,6 +13,10 @@
 
 using namespace cv;
 using namespace std;
+const char* dataDir = "../data";
+const char* resultDir = "../result";
+const char* wndname = "Square Detection";
+int thresh = 50, N = 11;
 
 static void help()
 {
@@ -26,11 +30,6 @@ static void help()
     "./squares\n"
     "Using OpenCV version %s\n" << CV_VERSION << "\n" << endl;
 }
-
-
-int thresh = 50, N = 11;
-const char* wndname = "Square Detection Demo";
-
 // helper function:
 // finds a cosine of angle between vectors
 // from pt0->pt1 and from pt0->pt2
@@ -102,7 +101,7 @@ static void findSquares( const Mat& image, vector<vector<Point> >& squares )
                 // area may be positive or negative - in accordance with the
                 // contour orientation
                 if( approx.size() == 4 &&
-                    fabs(contourArea(Mat(approx))) > 1000 &&
+                    fabs(contourArea(Mat(approx))) > 100 &&
                     isContourConvex(Mat(approx)) )
                 {
                     double maxCosine = 0;
@@ -138,17 +137,56 @@ static void drawSquares( Mat& image, const vector<vector<Point> >& squares )
 
     imshow(wndname, image);
 }
-
+//dilate the image
+void Dilation(  Mat& src, Mat& dilation_dst, int dilation_elem, int dilation_size, void* )
+{
+  int dilation_type = 0;
+  if( dilation_elem == 0 ){ dilation_type = MORPH_RECT; }
+  else if( dilation_elem == 1 ){ dilation_type = MORPH_CROSS; }
+  else if( dilation_elem == 2) { dilation_type = MORPH_ELLIPSE; }
+  Mat element = getStructuringElement( dilation_type,
+                       Size( 2*dilation_size + 1, 2*dilation_size+1 ),
+                       Point( dilation_size, dilation_size ) );
+  dilate( src, dilation_dst, element );
+  imshow( "Dilation Demo", dilation_dst );
+}
+//erode the image
+void Erosion( Mat& src, Mat& erosion_dst, int erosion_elem, int erosion_size, void* )
+{
+  int erosion_type = 0;
+  if( erosion_elem == 0 ){ erosion_type = MORPH_RECT; }
+  else if( erosion_elem == 1 ){ erosion_type = MORPH_CROSS; }
+  else if( erosion_elem == 2) { erosion_type = MORPH_ELLIPSE; }
+  Mat element = getStructuringElement( erosion_type,
+                       Size( 2*erosion_size + 1, 2*erosion_size+1 ),
+                       Point( erosion_size, erosion_size ) );
+  erode( src, erosion_dst, element );
+  imshow( "Erosion Demo", erosion_dst );
+}
+//proprocess image
+//gaussian blur + OTSU Binarization
+void preProcess( Mat& src, Mat& dst, int vis){
+	int erosion_elem = 0, erosion_size = 0, max_elem=10, max_kernel_size = 10;
+	Mat dst1,dst2;
+	cvtColor(src,dst,CV_RGB2GRAY);
+	GaussianBlur(dst,dst,Size(7,7),0,0);
+	cv::threshold(dst, dst, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+	// threshhold with gaussian weighted vote
+	//cv::adaptiveThreshold(dst, dst2, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY,9,11);
+	//string saveFileName = resultDir + string("//gaussBlur7.jpg");
+	//imwrite(saveFileName,dst1);
+	if(vis)	imshow(wndname,dst);
+	return;
+}
 
 int main(int /*argc*/, char** /*argv*/)
 {
-    static const char* names[] = { "../data/testPhoto.jpg", "../data/pic2.png", "../data/pic3.png",
-        "../data/pic4.png", "../data/pic5.png", "../data/pic6.png", 0 };
+    static const char* names[] = { "../testData/test001.jpg", 0 };
     help();
     namedWindow( wndname, 1 );
     vector<vector<Point> > squares;
 
-    for( int i = 0; i != 1; i++ )
+    for( int i = 0; names[i] != 0; i++ )
     {
         Mat image = imread(names[i], 1);
         if( image.empty() )
@@ -156,10 +194,11 @@ int main(int /*argc*/, char** /*argv*/)
             cout << "Couldn't load " << names[i] << endl;
             continue;
         }
-
-        findSquares(image, squares);
-        drawSquares(image, squares);
-
+		Mat result;
+		preProcess(image,result,0);
+		//imshow(wndname,result);
+		findSquares(result, squares);
+        drawSquares(result, squares);
         int c = waitKey();
         if( (char)c == 27 )
             break;
