@@ -6,29 +6,36 @@
 
 #include "imageProcess.h"
 
-#include <iostream>
-#include <math.h>
-#include <string.h>
+
 
 class imageProcessWindow{
 public:
 	imageProcessWindow();
 	~imageProcessWindow();
 
-	//source image
-	Mat	*src,*dst;
-	String windowName1,windowName2;
+	//objects
+	Mat	*src,*dst,*dst1;
+	String windowName1,windowName2,windowName3;
+	vector<Vec4i> lines;
+	imageProcess *imgProcess;
+
 	//image process parameter
 	int gaussianSize;
 	int cannyThreshold;
-	//load image
-	bool loadImage(String imgName);
-	
-	imageProcess *imgProcess;
+	int houghLineThreshold;
+	int houghLineMinLin;
+	int houghLineMaxGap;
+	float oddRate;
 
+	//operations
+	bool loadImage(String imgName);
+	void drawLines();
+	void filterLines();
+	
 	//tracker function
 	static void onCannyTracker(int ,void* param);
 	void doCannyTracker();
-
+	static void onHoughLineTracker(int, void* param);
+	void doHoughLineTracker();
 };
 #endif

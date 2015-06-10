@@ -180,28 +180,35 @@ void onCannyTrackbar(int, void*)
 
 int main(int /*argc*/, char** /*argv*/)
 {
-    static const char* names[] = { "../testData/IMG_0127.jpg", 0 };
+    static const char* names[] = { "../testData/IMG_0131.jpg", 0 };
 
     help();
     //namedWindow( wndname, 1 );
     vector<vector<Point> > squares;
 	imageProcessWindow mainWindow;
-	imageProcess imgProcess;
+	//parameter set		
+	mainWindow.windowName1 = "src image";
+	mainWindow.windowName2 = "dst image";
+	mainWindow.windowName3 = "dst1 image";
+	mainWindow.gaussianSize = 3;
+	mainWindow.cannyThreshold = 100;
+	mainWindow.houghLineThreshold = 80;
+	mainWindow.houghLineMinLin = 15;
+	mainWindow.houghLineMaxGap = 1;
     for( int i = 0; names[i] != 0; i++ )
     {
-		//parameter set
-		mainWindow.windowName1 = "src image";
-		mainWindow.windowName2 = "dst image";
-		mainWindow.gaussianSize = 3;
-		mainWindow.cannyThreshold = 100;
 		mainWindow.loadImage(names[i]);
 		mainWindow.imgProcess->preProcess(*(mainWindow.src),*(mainWindow.dst),mainWindow.gaussianSize);
 		
+		//edge detection
 		//create a toolbar to set a idead canny threshold
 		createTrackbar("Canny threshold", mainWindow.windowName2, &mainWindow.cannyThreshold, 500, mainWindow.onCannyTracker,&mainWindow);
-
 		mainWindow.doCannyTracker();
-		
+		namedWindow(mainWindow.windowName3,1);
+		createTrackbar("Hough threshold", mainWindow.windowName3, &mainWindow.houghLineThreshold, 200, mainWindow.onHoughLineTracker,&mainWindow);
+		createTrackbar("MinLin", mainWindow.windowName3, &mainWindow.houghLineMinLin, 50, mainWindow.onHoughLineTracker,&mainWindow);
+		createTrackbar("MaxGap", mainWindow.windowName3, &mainWindow.houghLineMaxGap, 10, mainWindow.onHoughLineTracker,&mainWindow);
+		mainWindow.doHoughLineTracker();
 
 
 

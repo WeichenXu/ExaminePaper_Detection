@@ -7,7 +7,11 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui/highgui.hpp"
+#include <iostream>
+#include <math.h>
+#include <string.h>
 using namespace cv;
+using namespace std;
 class imageProcess{
 public:
 	// preprocess image
@@ -18,9 +22,8 @@ public:
 	// edge detect
 	void edgeDetect(Mat& src, Mat& dst, int lowThreshold, int highThreshold, int kernelSize);
 	// detect lines in the image
-	void detectLines();
-	// draw lines in the image
-	void drawLines();
+	void detectLines(Mat& src, vector<Vec4i> &lines,int threshold, int minLen, int maxGap);
+	
 	// detect squares in the image
 	void detectSquares();
 	// draw squares in the image
