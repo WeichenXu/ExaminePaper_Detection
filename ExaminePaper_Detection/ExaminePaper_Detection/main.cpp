@@ -172,38 +172,39 @@ void preProcess( Mat& src, Mat& dst, int vis){
 	if(vis)	imshow(wndname,dst);
 	return;
 }
+// define a trackbar callback
+void onCannyTrackbar(int, void*)
+{
+    
+}
 
 int main(int /*argc*/, char** /*argv*/)
 {
     static const char* names[] = { "../testData/IMG_0127.jpg", 0 };
 
     help();
-    namedWindow( wndname, 1 );
+    //namedWindow( wndname, 1 );
     vector<vector<Point> > squares;
 	imageProcessWindow mainWindow;
 	imageProcess imgProcess;
     for( int i = 0; names[i] != 0; i++ )
     {
-		mainWindow.windowName = wndname;
+		//parameter set
+		mainWindow.windowName1 = "src image";
+		mainWindow.windowName2 = "dst image";
+		mainWindow.gaussianSize = 3;
+		mainWindow.cannyThreshold = 100;
 		mainWindow.loadImage(names[i]);
-		imgProcess.preProcess(*(mainWindow.src),*(mainWindow.dst),3);
-		imshow(wndname,*(mainWindow.dst));
-		// create a toolbar
-		createTrackbar("Canny threshold", wndname, &mainWindow.cannyThreshold, 100, mainWindow.onCannyTracker);
-		mainWindow.onCannyTracker(0,0);
-    // Show the image
-    //onTrackbar(0, 0);
-		/*
-        Mat image = imread(names[i], 1);
-        if( image.empty() )
-        {
-            cout << "Couldn't load " << names[i] << endl;
-            continue;
-        }
-		Mat result;
-		imgP.preProcess(image,result,5);
+		mainWindow.imgProcess->preProcess(*(mainWindow.src),*(mainWindow.dst),mainWindow.gaussianSize);
 		
-		*/
+		//create a toolbar to set a idead canny threshold
+		createTrackbar("Canny threshold", mainWindow.windowName2, &mainWindow.cannyThreshold, 500, mainWindow.onCannyTracker,&mainWindow);
+
+		mainWindow.doCannyTracker();
+		
+
+
+
 		//findSquares(result, squares);
         //drawSquares(result, squares);
         int c = waitKey();

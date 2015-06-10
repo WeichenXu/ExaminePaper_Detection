@@ -5,6 +5,11 @@
 imageProcessWindow::imageProcessWindow(){
 	imgProcess = new imageProcess();
 	dst = new Mat;
+	namedWindow( this->windowName1, 1 );
+	namedWindow( this->windowName2, 1 );
+	// parameter init
+	this->gaussianSize = 3;
+	this->cannyThreshold = 0;
 }
 imageProcessWindow::~imageProcessWindow(){
 	delete imgProcess;
@@ -20,10 +25,19 @@ bool imageProcessWindow::loadImage(String imageName){
 	}
 	src = new Mat;
 	*src = image;
+	*dst = *src;
+	imshow(this->windowName1,*(this->src));
+	imshow(this->windowName2,*(this->dst));
 	return true;
 }
 
 // tracker call back function for canny detection
-void imageProcessWindow::onCannyTracker(int, void*){
-	imgProcess->edgeDetect(*(this->dst),*this->dst , this->cannyThreshold, this->cannyThreshold*3, 3);
+void imageProcessWindow::doCannyTracker(){
+	imgProcess->edgeDetect(*(this->src),*(this->dst) , this->cannyThreshold, this->cannyThreshold*3, 3);
+	imshow(this->windowName2,*(this->dst));
+}
+void imageProcessWindow::onCannyTracker(int, void* param){
+	imageProcessWindow *self = (imageProcessWindow *)(param);
+	self->doCannyTracker();
+
 }

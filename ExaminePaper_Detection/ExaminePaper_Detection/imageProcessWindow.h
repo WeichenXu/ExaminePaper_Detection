@@ -17,15 +17,18 @@ public:
 
 	//source image
 	Mat	*src,*dst;
+	String windowName1,windowName2;
 	//image process parameter
+	int gaussianSize;
 	int cannyThreshold;
 	//load image
 	bool loadImage(String imgName);
-	String windowName;
+	
 	imageProcess *imgProcess;
 
 	//tracker function
-	void onCannyTracker(int, void*);
+	static void onCannyTracker(int ,void* param);
+	void doCannyTracker();
 
 };
 #endif
