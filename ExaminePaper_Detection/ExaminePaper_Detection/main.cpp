@@ -2,15 +2,9 @@
 // It loads several images sequentially and tries to find squares in
 // each image
 
-#include "opencv2/core/core.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui/highgui.hpp"
 
-#include <iostream>
-#include <math.h>
-#include <string.h>
 
+#include "imageProcessWindow.h"
 using namespace cv;
 using namespace std;
 const char* dataDir = "../data";
@@ -181,13 +175,25 @@ void preProcess( Mat& src, Mat& dst, int vis){
 
 int main(int /*argc*/, char** /*argv*/)
 {
-    static const char* names[] = { "../testData/test001.jpg", 0 };
+    static const char* names[] = { "../testData/IMG_0127.jpg", 0 };
+
     help();
     namedWindow( wndname, 1 );
     vector<vector<Point> > squares;
-
+	imageProcessWindow mainWindow;
+	imageProcess imgProcess;
     for( int i = 0; names[i] != 0; i++ )
     {
+		mainWindow.windowName = wndname;
+		mainWindow.loadImage(names[i]);
+		imgProcess.preProcess(*(mainWindow.src),*(mainWindow.dst),3);
+		imshow(wndname,*(mainWindow.dst));
+		// create a toolbar
+		createTrackbar("Canny threshold", wndname, &mainWindow.cannyThreshold, 100, mainWindow.onCannyTracker);
+		mainWindow.onCannyTracker(0,0);
+    // Show the image
+    //onTrackbar(0, 0);
+		/*
         Mat image = imread(names[i], 1);
         if( image.empty() )
         {
@@ -195,10 +201,11 @@ int main(int /*argc*/, char** /*argv*/)
             continue;
         }
 		Mat result;
-		preProcess(image,result,0);
-		//imshow(wndname,result);
-		findSquares(result, squares);
-        drawSquares(result, squares);
+		imgP.preProcess(image,result,5);
+		
+		*/
+		//findSquares(result, squares);
+        //drawSquares(result, squares);
         int c = waitKey();
         if( (char)c == 27 )
             break;
