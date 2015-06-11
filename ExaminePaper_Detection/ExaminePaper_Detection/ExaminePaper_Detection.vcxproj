@@ -156,6 +156,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="boxBoard.h" />
     <ClInclude Include="imageProcess.h" />
     <ClInclude Include="imageProcessWindow.h" />
     <ClInclude Include="lineInfo.h" />

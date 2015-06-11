@@ -180,7 +180,7 @@ void onCannyTrackbar(int, void*)
 
 int main(int /*argc*/, char** /*argv*/)
 {
-    static const char* names[] = { "../testData/IMG_0130.jpg", 0 };
+    static const char* names[] = { "../testData/IMG_0135.jpg", 0 };
 
     help();
     //namedWindow( wndname, 1 );
@@ -192,7 +192,7 @@ int main(int /*argc*/, char** /*argv*/)
 	mainWindow.windowName3 = "dst1 image";
 	mainWindow.gaussianSize = 3;
 	mainWindow.cannyThreshold = 100;
-	mainWindow.houghLineThreshold = 80;
+	mainWindow.houghLineThreshold = 50;
 	mainWindow.houghLineMinLin = 15;
 	mainWindow.houghLineMaxGap = 1;
     for( int i = 0; names[i] != 0; i++ )
