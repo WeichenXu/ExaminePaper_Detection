@@ -32,5 +32,8 @@
     <ClInclude Include="imageProcessWindow.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="lineInfo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

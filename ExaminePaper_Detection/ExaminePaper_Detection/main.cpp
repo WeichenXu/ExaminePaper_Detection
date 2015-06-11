@@ -180,7 +180,7 @@ void onCannyTrackbar(int, void*)
 
 int main(int /*argc*/, char** /*argv*/)
 {
-    static const char* names[] = { "../testData/IMG_0131.jpg", 0 };
+    static const char* names[] = { "../testData/IMG_0130.jpg", 0 };
 
     help();
     //namedWindow( wndname, 1 );

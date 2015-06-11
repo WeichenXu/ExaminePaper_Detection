@@ -5,7 +5,7 @@
 #define EXAMINE_PAPER_WINDOW
 
 #include "imageProcess.h"
-
+#include "lineInfo.h"
 
 
 class imageProcessWindow{
@@ -17,6 +17,8 @@ public:
 	Mat	*src,*dst,*dst1;
 	String windowName1,windowName2,windowName3;
 	vector<Vec4i> lines;
+	vector<lineInfo> verLines;
+	vector<lineInfo> horLines;
 	imageProcess *imgProcess;
 
 	//image process parameter
@@ -26,10 +28,15 @@ public:
 	int houghLineMinLin;
 	int houghLineMaxGap;
 	float oddRate;
+	float maxRotation;
+	float boxWidth,boxHeight;
 
 	//operations
 	bool loadImage(String imgName);
 	void drawLines();
+	void setLinesByAngles();
+	int averageLine(vector<lineInfo> &lines);
+	void getBoxSize();
 	void filterLines();
 	
 	//tracker function
