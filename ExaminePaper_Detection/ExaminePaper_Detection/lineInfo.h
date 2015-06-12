@@ -8,3 +8,10 @@ struct lineInfo{
 		return (this->length < a.length);
 	}
 };
+struct boxLine{
+	int start;
+	int count;
+	bool operator< (const boxLine &a){
+		return (this->start < a.start);
+	}
+};

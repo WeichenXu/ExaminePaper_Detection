@@ -83,6 +83,21 @@ void imageProcessWindow::setBoxBoard(){
 		boxes.X[vec[2]] = boxes.X[vec[2]] + 1;
 		boxes.Y[vec[1]] = boxes.Y[vec[1]] + 1;
 		boxes.Y[vec[3]] = boxes.Y[vec[3]] + 1;
+		int minY = vec[1] < vec[3] ? vec[1]:vec[3];
+		for(int j=0; j<=this->boxH.size(); j++){
+			if(j == boxH.size()){
+				boxLine added;
+				added.start = minY;
+				added.count = 1;
+				boxH.push_back(added);
+			}
+			if(std::abs(minY - boxH[j].start) < 5){
+				boxH[j].start = (boxH[j].count*boxH[j].start + minY) / (boxH[j].count + 1);
+				boxH[j].count = boxH[j].count + 1;
+				break;
+			}
+			
+		}
 	}
 	for (int i=0; i<horLines.size(); i++){
 		Vec4i vec = lines[horLines[i].index];
@@ -90,72 +105,80 @@ void imageProcessWindow::setBoxBoard(){
 		boxes.X[vec[2]] = boxes.X[vec[2]] + 1;
 		boxes.Y[vec[1]] = boxes.Y[vec[1]] + 1;
 		boxes.Y[vec[3]] = boxes.Y[vec[3]] + 1;
-	}
-	//delete odd elements
-	/*
-	for(int i=1; i<MAX_IMAGE_SIZE-3; i++){
-		if(!(boxes.X[i] && boxes.X[i+1] && boxes.X[i-1] || boxes.X[i] > 5))
-			boxes.X[i] = 0;
-		if(!(boxes.Y[i] && boxes.Y[i+1] && boxes.Y[i-1] || boxes.Y[i] > 5))
-			boxes.Y[i] = 0;
-	}
-	*/
-	
-	// clear gap
-	/*
-	for(int i=1; i<MAX_IMAGE_SIZE-3; i++){
-		if(boxes.X[i+1] && boxes.X[i-1]){
-			boxes.X[i] = 1;
-			boxes.X[i-1] = 0;
-			boxes.X[i+1] = 0;
-		}
-		if(boxes.Y[i+1] && boxes.Y[i-1]){
-			boxes.Y[i] = 1;
-			boxes.Y[i-1] = 0;
-			boxes.Y[i+1] = 0;
-		}
+		int minX = vec[0] < vec[2] ? vec[0]:vec[2];
+		for(int j=0; j<=this->boxW.size(); j++){
+			if(j == boxW.size())
+			{
+				boxLine added;
+				added.start = minX;
+				added.count = 1;
+				boxW.push_back(added);
+			}
+			if(std::abs(minX - boxW[j].start) < 5){
+				boxW[j].start = (boxW[j].count*boxW[j].start + minX) / (boxW[j].count + 1);
+				boxW[j].count = boxW[j].count + 1;
+				break;
+			}
 			
+		}
 	}
-	*/
-
 }
 
 // check box board to set the valid coord
 void imageProcessWindow::checkBoxBoard(){
-	//merge nearby elements
-	for(int i=0; i<MAX_IMAGE_SIZE; i++){
-		int maxCount = 0, index, begin=i;
+	for(int i=0; i<boxW.size();i++){
+		// check line count
+		if(boxW[i].count < 2)
+			boxW.erase(boxW.begin()+i);
+		// check point count
+		int startX = boxW[i].start;
+		int sumCount = boxes.X[startX-2] + boxes.X[startX-1] + boxes.X[startX] + boxes.X[startX+1] + boxes.X[startX+2];
+		if(sumCount < 6)
+			boxW.erase(boxW.begin()+i);
+	}
+	for(int i=0; i<boxH.size();i++){
+		if(boxH[i].count < 2)
+			boxH.erase(boxH.begin()+i);
+		// check point count
+		int startY = boxH[i].start;
+		int sumCount = boxes.Y[startY-2] + boxes.Y[startY-1] + boxes.Y[startY] + boxes.Y[startY+1] + boxes.Y[startY+2];
+		if(sumCount < 6)
+			boxH.erase(boxH.begin()+i);
+	}
+	//sort and delete odd ones
+	sort(boxW.begin(),boxW.end());
+	sort(boxH.begin(),boxH.end());
+	//merge nearby ones
+	mergeNearbyLine(boxW);
+	mergeNearbyLine(boxH);
 
-		while(boxes.X[i] > 0){
-			maxCount = boxes.X[i];
-			index = i;
-			i++;
+	//delete odd ones
+	//consider diff bitween pairs, from and only header
+	for(int i=0; i<boxH.size() - 1; i++){
+		float normalDiff = boxH[i+1].start - boxH[i].start;
+		bool valid = true;
+		for(int j=i+1; j<boxH.size() - 1; j++){
+			float currentDiff = boxH[j+1].start - boxH[j].start;
+			if (std::abs(currentDiff/normalDiff - 1) < 0.3)
+				continue;
+			valid = false;
+			break;
 		}
-		if(maxCount){
-			for(int j=begin; j<index;j++)	boxes.X[j] = 0;
-			for(int j=index+1; j<=i;j++)	boxes.X[j] = 0;
-		}
+		if(!valid)	boxH.erase(boxH.begin()+i);
 	}
-	for(int i=0; i<MAX_IMAGE_SIZE; i++){
-		int maxCount = 0, index, begin=i;
-
-		while(boxes.Y[i] > 0){
-			maxCount = boxes.Y[i];
-			index = i;
-			i++;
+	for(int i=0; i<boxW.size() - 1; i++){
+		float normalDiff = boxW[i+1].start - boxW[i].start;
+		bool valid = true;
+		for(int j=i+1; j<boxW.size()-1; j++){
+			float currentDiff = boxW[j+1].start - boxW[j].start;
+			if (std::abs(currentDiff/normalDiff - 1) < 0.3)
+				continue;
+			valid = false;
+			break;
 		}
-		if(maxCount){
-			for(int j=begin; j<index;j++)	boxes.Y[j] = 0;
-			for(int j=index+1; j<=i;j++)	boxes.Y[j] = 0;
-		}
+		if(!valid)	boxW.erase(boxW.begin()+i);
 	}
-	// delete odd
-	for(int i=0; i<MAX_IMAGE_SIZE; i++){
-		if(boxes.X[i] < 3)
-			boxes.X[i] = 0;
-		if(boxes.Y[i] < 3)
-			boxes.Y[i] = 0;
-	}
+	
 }
 //filter detected lines
 void imageProcessWindow::filterLines(){
@@ -189,24 +212,23 @@ void imageProcessWindow::drawLines(int option){
 		}
 	}
 	else if(option == 2){
-		vector<int> xs, ys;
-		for(int i=0; i<MAX_IMAGE_SIZE; i++){
-			if(boxes.X[i])	xs.push_back(i);
-			if(boxes.Y[i])	ys.push_back(i);
-		}
 		// draw all vers
-		for(int i=0; i<ys.size()-1;i+=2){
-			int start = ys[i];
-			int end = ys[i+1];
-			for(int j=0; j<xs.size();j++)
-				line(*this->dst1, Point(xs[j],start), Point(xs[j],end), Scalar(255,255,255), 3, CV_AA);
+		for(int i=0; i<boxH.size();i++){
+			int start = boxH[i].start;
+			int end = start + boxHeight;
+			for(int j=0; j<boxW.size();j++){
+				line(*this->dst1, Point(boxW[j].start,start), Point(boxW[j].start,end), Scalar(255,255,255), 3, CV_AA);
+				line(*this->dst1, Point(boxW[j].start + boxWidth,start), Point(boxW[j].start + boxWidth,end), Scalar(255,255,255), 3, CV_AA);
+			}
 		}
 		// draw all hors
-		for(int i=0; i<xs.size()-1;i+=2){
-			int start = xs[i];
-			int end = xs[i+1];
-			for(int j=0; j<ys.size();j++)
-				line(*this->dst1, Point(start, ys[j]), Point(end, ys[j]), Scalar(255,255,255), 3, CV_AA);
+		for(int i=0; i<boxW.size();i++){
+			int start = boxW[i].start;
+			int end = start + boxWidth;
+			for(int j=0; j<boxH.size();j++){
+				line(*this->dst1, Point(start,boxH[j].start), Point(end,boxH[j].start), Scalar(255,255,255), 3, CV_AA);
+				line(*this->dst1, Point(start,boxH[j].start+boxHeight), Point(end,boxH[j].start + boxHeight), Scalar(255,255,255), 3, CV_AA);
+			}
 		}
 	}
 	else{
@@ -247,4 +269,15 @@ void imageProcessWindow::onHoughLineTracker(int, void* param){
 	imageProcessWindow *self = (imageProcessWindow *)(param);
 	self->doHoughLineTracker();
 
+}
+
+//private functions
+bool imageProcessWindow::compareBoxLoca(Vec3i &a, Vec3i &b){
+	return (a[1] < b[1]);
+}
+void imageProcessWindow::mergeNearbyLine(vector<boxLine> & boxLines){
+	for(int i=0; i<boxLines.size() - 1; i++){
+		if((boxLines[i+1].start - boxLines[i].start) < 2)
+			boxLines.erase(boxLines.begin()+i);
+	}
 }

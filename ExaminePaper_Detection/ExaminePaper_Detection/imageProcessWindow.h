@@ -18,6 +18,8 @@ public:
 	Mat	*src,*dst,*dst1;
 	String windowName1,windowName2,windowName3;
 	vector<Vec4i> lines;
+	vector<boxLine> boxW;
+	vector<boxLine> boxH;
 	vector<lineInfo> verLines;
 	vector<lineInfo> horLines;
 	imageProcess *imgProcess;
@@ -49,5 +51,7 @@ public:
 
 private:
 	void checkBoxBoard();
+	void mergeNearbyLine(vector<boxLine> & boxLines);
+	bool compareBoxLoca(Vec3i &a, Vec3i &b);
 };
 #endif
