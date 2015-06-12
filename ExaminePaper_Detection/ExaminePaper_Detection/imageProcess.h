@@ -29,4 +29,4 @@ public:
 	// draw squares in the image
 	void drawSquares();
 };
-#endif
+#endif EXAMINE_PAPER_IMAGE_PROCESS

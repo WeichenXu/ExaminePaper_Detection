@@ -22,6 +22,7 @@ public:
 	vector<boxLine> boxH;
 	vector<lineInfo> verLines;
 	vector<lineInfo> horLines;
+	vector<int> detectResult;
 	imageProcess *imgProcess;
 
 	//image process parameter
@@ -42,6 +43,8 @@ public:
 	void getBoxSize();
 	void filterLines();
 	void setBoxBoard();
+	void detectBoxNum();
+	void printResult();
 	
 	//tracker function
 	static void onCannyTracker(int ,void* param);
@@ -53,5 +56,6 @@ private:
 	void checkBoxBoard();
 	void mergeNearbyLine(vector<boxLine> & boxLines);
 	bool compareBoxLoca(Vec3i &a, Vec3i &b);
+	int boxAveragePixes(int x, int y);
 };
 #endif

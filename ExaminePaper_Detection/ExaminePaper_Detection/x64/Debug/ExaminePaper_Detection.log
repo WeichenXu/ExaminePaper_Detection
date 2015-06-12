@@ -1,4 +1,4 @@
-﻿生成启动时间为 2015/6/12 14:34:55。
+﻿生成启动时间为 2015/6/12 16:24:57。
      1>项目“H:\git\ExaminePaper_Detection\ExaminePaper_Detection\ExaminePaper_Detection\ExaminePaper_Detection.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
          F:\visualstudio2012\VC\bin\x86_amd64\CL.exe /c /IF:\OpenCV_3.0\opencv\build\x64\vc11\..\..\include /Zi /nologo /W3 /WX- /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc110.pdb" /Gd /TP /errorReport:prompt main.cpp
@@ -15,4 +15,4 @@
 
 生成成功。
 
-已用时间 00:00:01.98
+已用时间 00:00:02.76

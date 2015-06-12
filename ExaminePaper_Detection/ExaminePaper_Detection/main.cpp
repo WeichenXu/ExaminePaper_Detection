@@ -180,7 +180,7 @@ void onCannyTrackbar(int, void*)
 
 int main(int /*argc*/, char** /*argv*/)
 {
-    static const char* names[] = { "../testData/IMG_0135.jpg", 0 };
+    static const char* names[] = { "../testData/IMG_0128.jpg", 0 };
 
     help();
     //namedWindow( wndname, 1 );
@@ -198,7 +198,7 @@ int main(int /*argc*/, char** /*argv*/)
     for( int i = 0; names[i] != 0; i++ )
     {
 		mainWindow.loadImage(names[i]);
-		mainWindow.imgProcess->preProcess(*(mainWindow.src),*(mainWindow.dst),mainWindow.gaussianSize);
+		//mainWindow.imgProcess->preProcess(*(mainWindow.src),*(mainWindow.dst),mainWindow.gaussianSize);
 		
 		//edge detection
 		//create a toolbar to set a idead canny threshold
@@ -209,8 +209,8 @@ int main(int /*argc*/, char** /*argv*/)
 		createTrackbar("MinLin", mainWindow.windowName3, &mainWindow.houghLineMinLin, 50, mainWindow.onHoughLineTracker,&mainWindow);
 		createTrackbar("MaxGap", mainWindow.windowName3, &mainWindow.houghLineMaxGap, 10, mainWindow.onHoughLineTracker,&mainWindow);
 		mainWindow.doHoughLineTracker();
-
-
+		mainWindow.detectBoxNum();
+		mainWindow.printResult();
 
 		//findSquares(result, squares);
         //drawSquares(result, squares);

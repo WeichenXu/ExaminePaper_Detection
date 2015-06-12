@@ -1,4 +1,4 @@
-// header for line info 
+// header for self defined structs
 // Author: Weichen Xu
 // Date: 2015/6/11
 struct lineInfo{

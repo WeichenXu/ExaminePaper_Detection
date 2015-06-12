@@ -270,6 +270,35 @@ void imageProcessWindow::onHoughLineTracker(int, void* param){
 	self->doHoughLineTracker();
 
 }
+// detect chosen num in each col of boxes
+void imageProcessWindow::detectBoxNum(){
+	for(int i=0; i<boxW.size(); i++){
+		int minIntensity = 255, avgIntensity = 0;
+		int minIntenNum;
+		for(int j=0; j<boxH.size(); j++){
+			int blockIntensity = boxAveragePixes(boxW[i].start,boxH[j].start);
+			avgIntensity += blockIntensity;
+			//cout<<blockIntensity<<" "<<endl;
+			if(blockIntensity < minIntensity){
+				minIntenNum = j;
+				minIntensity = blockIntensity;
+			}
+		}
+			//cout<<endl;
+		avgIntensity = avgIntensity / boxH.size();
+		if(minIntensity < 0.9*avgIntensity)
+			detectResult.push_back(minIntenNum);
+		else
+			detectResult.push_back(-1);
+		
+	}
+
+}
+//print detected num
+void imageProcessWindow::printResult(){
+	for(int i=0; i<detectResult.size(); i++)
+		cout<<detectResult[i]<<" ";
+}
 
 //private functions
 bool imageProcessWindow::compareBoxLoca(Vec3i &a, Vec3i &b){
@@ -280,4 +309,11 @@ void imageProcessWindow::mergeNearbyLine(vector<boxLine> & boxLines){
 		if((boxLines[i+1].start - boxLines[i].start) < 2)
 			boxLines.erase(boxLines.begin()+i);
 	}
+}
+int imageProcessWindow::boxAveragePixes(int x, int y){
+	Rect roi(x,y,boxWidth,boxHeight);
+	Mat block = (*src)(roi);
+	
+	Scalar result = cv::mean(block);
+	return result.val[0];
 }
