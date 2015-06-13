@@ -24,6 +24,9 @@
     <ClCompile Include="imageProcessWindow.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="numBoxBoard.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imageProcess.h">
@@ -36,6 +39,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="boxBoard.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="numBoxBoard.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,7 +6,8 @@
 // binarization with OTSU Threshold
 // Gaussian blur
 void imageProcess::preProcess(Mat& src, Mat& dst, int blurSize){
-	cvtColor(src,dst,CV_RGB2GRAY);
+	if(src.type() != CV_8UC1)	
+		cvtColor(src,dst,CV_RGB2GRAY);
 	GaussianBlur(dst,dst,Size(blurSize,blurSize),0,0);
 	threshold(dst, dst, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
 	return;

@@ -154,12 +154,14 @@
     <ClCompile Include="imageProcess.cpp" />
     <ClCompile Include="imageProcessWindow.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="numBoxBoard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="boxBoard.h" />
     <ClInclude Include="imageProcess.h" />
     <ClInclude Include="imageProcessWindow.h" />
     <ClInclude Include="lineInfo.h" />
+    <ClInclude Include="numBoxBoard.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
