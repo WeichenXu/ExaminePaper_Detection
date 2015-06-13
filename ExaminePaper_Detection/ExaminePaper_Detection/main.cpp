@@ -33,8 +33,8 @@ bool scanSpottedID(unsigned char* imgLinebyLine, int width, int height, int roiR
 	numBoxBoard.loadSrcFromMat(testBlock);
 	numBoxBoard.doCannyTracker();
 	numBoxBoard.doHoughLineTracker();
-	//imshow("detected Line",*numBoxBoard.getLine());
-	//imshow("detected box",*numBoxBoard.getBoxBoard());
+	imshow("detected Line",*numBoxBoard.getLine());
+	imshow("detected box",*numBoxBoard.getBoxBoard());
 	numBoxBoard.detectBoxNum();
 	if(!numBoxBoard.setResult(inputLen, output, outputLen)) return true;
 	//numBoxBoard.printResult();

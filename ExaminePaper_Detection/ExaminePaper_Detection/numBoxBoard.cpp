@@ -122,13 +122,18 @@ void NumBoxBoard::setBoxBoard(){
 			
 		}
 	}
+	//cout<<endl;
 }
 // check box board to set the valid coord
 void NumBoxBoard::checkBoxBoard(){
 	for(int i=0; i<boxW.size();i++){
 		// check line count
-		if(boxW[i].count < 2)
+		if(boxW[i].count < 2){
 			boxW.erase(boxW.begin()+i);
+		}
+		if(boxW[i].count > 5){
+			continue;
+		}
 		// check point count
 		int startX = boxW[i].start;
 		int sumCount = X[startX-2] + X[startX-1] + X[startX] + X[startX+1] + X[startX+2];
@@ -136,8 +141,12 @@ void NumBoxBoard::checkBoxBoard(){
 			boxW.erase(boxW.begin()+i);
 	}
 	for(int i=0; i<boxH.size();i++){
-		if(boxH[i].count < 2)
+		if(boxH[i].count < 2){
 			boxH.erase(boxH.begin()+i);
+		}
+		if(boxH[i].count > 5){
+			continue;
+		}
 		// check point count
 		int startY = boxH[i].start;
 		int sumCount = Y[startY-2] + Y[startY-1] + Y[startY] + Y[startY+1] + Y[startY+2];

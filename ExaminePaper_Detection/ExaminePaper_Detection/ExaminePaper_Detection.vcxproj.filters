@@ -21,9 +21,6 @@
     <ClCompile Include="imageProcess.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="imageProcessWindow.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="numBoxBoard.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -32,13 +29,7 @@
     <ClInclude Include="imageProcess.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="imageProcessWindow.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="lineInfo.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="boxBoard.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="numBoxBoard.h">
