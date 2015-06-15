@@ -161,7 +161,10 @@ void NumBoxBoard::checkBoxBoard(){
 	mergeNearbyLine(boxH);
 
 	//delete odd ones
+	removeOddPoints(boxW);
+	removeOddPoints(boxH);
 	//consider diff bitween pairs, from and only header
+	/*
 	for(int i=0; i<boxH.size() - 1; i++){
 		float normalDiff = boxH[i+1].start - boxH[i].start;
 		bool valid = true;
@@ -186,7 +189,7 @@ void NumBoxBoard::checkBoxBoard(){
 		}
 		if(!valid)	boxW.erase(boxW.begin()+i);
 	}
-	
+	*/
 }
 //filter detected lines
 void NumBoxBoard::filterLines(){
@@ -366,4 +369,51 @@ void NumBoxBoard::clearData(){
 	verLines.clear();
 	horLines.clear();
 	detectResult.clear();
+}
+bool compareCounts(boxLine &a, boxLine &b){
+	return a.count>b.count;
+}
+// delete the odd points from the vector
+void NumBoxBoard::removeOddPoints(vector<boxLine> & boxLines){
+	vector<int> startOffs;
+	vector<boxLine> countOrder;
+	int commonDiff;
+	for(int i=0; i<boxLines.size(); i++){
+		boxLine order;
+		order.start = i;
+		order.count = boxLines[i].count;
+		countOrder.push_back(order);
+	}
+	sort(countOrder.begin(),countOrder.end(),compareCounts);
+	for(int i=0; i<countOrder.size(); i++){
+		if(countOrder[i].start == 0 || countOrder[i].start == boxLines.size()-1)	continue;
+		int leftDiff = boxLines[countOrder[i].start].start - boxLines[countOrder[i].start-1].start;
+		int rightDiff = boxLines[countOrder[i].start+1].start - boxLines[countOrder[i].start].start;
+		if(abs(rightDiff - leftDiff) < 8){
+			commonDiff = 0.5*(rightDiff+leftDiff);
+			break;
+		}
+	}
+	for(int i=0; i < boxLines.size(); i++){
+		if(i == 0){
+			int rightDiff = boxLines[i+1].start - boxLines[i].start;
+			if(abs(rightDiff - commonDiff) > 5){
+				boxLines.erase(boxLines.begin()+i);
+			}
+		}
+		else if(i == boxLines.size() -1){
+			int leftDiff = boxLines[i].start - boxLines[i-1].start;
+			if(abs(leftDiff - commonDiff) > 5){
+				boxLines.erase(boxLines.begin()+i);
+			}
+		}
+		else{
+			int rightDiff = boxLines[i+1].start - boxLines[i].start;
+			int leftDiff = boxLines[i].start - boxLines[i-1].start;
+			if(abs(rightDiff - commonDiff) > 5 &&
+				abs(leftDiff - commonDiff) > 5){
+					boxLines.erase(boxLines.begin()+i);
+			}
+		}
+	}
 }

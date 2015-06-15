@@ -45,7 +45,7 @@ bool scanSpottedID(unsigned char* imgLinebyLine, int width, int height, int roiR
 int main(int /*argc*/, char** /*argv*/)
 {
     static const char* names[] = 
-	{	"../testData/IMG_0131.jpg"};
+	{	"../testData/test001.jpg"};
     help();
     
     for( int i = 0; i<1 ; i++ )

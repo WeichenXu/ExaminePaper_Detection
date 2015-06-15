@@ -65,6 +65,7 @@ private:
 	
 	void checkBoxBoard();
 	void mergeNearbyLine(vector<boxLine> & boxLines);
+	void removeOddPoints(vector<boxLine> & boxLines);
 	bool compareBoxLoca(Vec3i &a, Vec3i &b);
 	int boxAveragePixes(int x, int y);
 };
